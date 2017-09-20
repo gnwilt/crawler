@@ -1,5 +1,8 @@
 //----------------------------------------------------------------------------------------
 // 20170919: save html to mongodb, error request marked as no content for later refetch
+// db.pages.remove({url: {$not: /.html$/}})
+// db.pages.aggregate([{$match:{content:{$ne:null}}},{$group:{"_id":"$url","number":{$sum:1}}},{$match:{number:{$ne:1}}},{$group:{_id:1,count:{$sum:1}}}])
+// db.pages.aggregate([{$match:{content:{$ne:null}}},{$group:{"_id":"$url","number":{$sum:1}}},{$match:{number:{$eq:1}}},{$group:{_id:1,count:{$sum:1}}}])
 //----------------------------------------------------------------------------------------
 import Book from './models/book';
 import Page from './models/page';
