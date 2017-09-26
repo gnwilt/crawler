@@ -51,25 +51,28 @@ function loadEntry(url) {
   request({ url: url, headers: {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405'} }, 
   function(err, resp, body) { 
     var newPage = new Page();
+    var $;
     if(err) {
       newPage.url = url;
       //console.log(url);
+      newPage.save((err, saved) => {
+        if (err) {
+          console.log('error: ' + url);
+        }
+      });
+      return;
     }
     else{
-      var $ = cheerio.load(body);
+      $ = cheerio.load(body);
       newPage.url = url;
-      newPage.content = sanitizeHtml($.html());
+      newPage.content = body;
+      newPage.save((err, saved) => {
+        if (err) {
+          console.log('error: ' + url);
+        }
+      });
     }
 
-    newPage.save((err, saved) => {
-      if (err) {
-        //console.log('error: ' + url);
-      }
-      else{
-        // delete currDoc[title];
-        // console.log('success: ' + title);
-      }
-    });
     if(err || !$('ul.pagelist').find('li').last() || !$('ul.pagelist').find('li').last().children()) return;
     var last = $('ul.pagelist').find('li').last().children()[0];
     if(!last) return;
